@@ -257,7 +257,6 @@ ORDER BY COUNT(zdo."Zone") DESC
 SELECT 
 CONCAT(zpu."Zone", '/', zdo."Zone") AS "bothzones",
 AVG(total_amount) AS "average"
-
 FROM 
 yellow_taxi_trips yellow FULL OUTER JOIN zones zpu 
 ON 
