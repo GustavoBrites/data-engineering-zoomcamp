@@ -216,4 +216,54 @@ services:
 
 ### SQL 
 
-Coming soon!
+/*Question 3*/
+SELECT 
+    CAST(tpep_pickup_datetime AS DATE) as "day", 
+	COUNT(1)
+FROM 
+yellow_taxi_trips
+GROUP BY 
+    CAST(tpep_pickup_datetime AS DATE)
+ORDER BY "day" ASC
+
+
+/*Question 4*/
+SELECT 
+    CAST(tpep_pickup_datetime AS DATE) as "day", 
+	MAX(tip_amount) AS "largest"
+FROM 
+yellow_taxi_trips
+GROUP BY 
+    CAST(tpep_pickup_datetime AS DATE)
+ORDER BY "day" ASC
+
+/*Question 5*/
+SELECT 
+CAST(tpep_pickup_datetime AS DATE) as "pickday",
+zdo."Zone",
+COUNT(zdo."Zone")
+FROM 
+yellow_taxi_trips yellow LEFT JOIN zones zpu 
+ON 
+yellow."PULocationID" = zpu."LocationID"
+LEFT JOIN zones zdo
+ON
+yellow."DOLocationID" = zdo."LocationID"
+WHERE zpu."Zone" = 'Central Park' AND CAST(tpep_pickup_datetime AS DATE) ='2021-01-14'
+GROUP BY "pickday", zdo."Zone"
+ORDER BY COUNT(zdo."Zone") DESC
+
+/*Question 6*/
+SELECT 
+CONCAT(zpu."Zone", '/', zdo."Zone") AS "bothzones",
+AVG(total_amount) AS "average"
+
+FROM 
+yellow_taxi_trips yellow FULL OUTER JOIN zones zpu 
+ON 
+yellow."PULocationID" = zpu."LocationID"
+FULL OUTER JOIN zones zdo
+ON
+yellow."DOLocationID" = zdo."LocationID"
+GROUP BY "bothzones"
+ORDER BY AVG(total_amount) DESC

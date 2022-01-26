@@ -22,3 +22,5 @@ variable "BQ_DATASET" {
   type = string
   default = "trips_data_all"
 }
+
+ 
