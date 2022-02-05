@@ -63,7 +63,7 @@ with DAG(
     dag_id="data_ingestion_gcs_dag",
     schedule_interval="@daily",
     default_args=default_args,
-    catchup=False,
+    catchup=True,
     max_active_runs=1,
     tags=['dtc-de'],
 ) as dag:
@@ -92,19 +92,19 @@ with DAG(
         },
     )
 
-    bigquery_external_table_task = BigQueryCreateExternalTableOperator(
-        task_id="bigquery_external_table_task",
-        table_resource={
-            "tableReference": {
-                "projectId": PROJECT_ID,
-                "datasetId": BIGQUERY_DATASET,
-                "tableId": "external_table",
-            },
-            "externalDataConfiguration": {
-                "sourceFormat": "PARQUET",
-                "sourceUris": [f"gs://{BUCKET}/raw/{parquet_file}"],
-            },
-        },
-    )
+    # bigquery_external_table_task = BigQueryCreateExternalTableOperator(
+    #     task_id="bigquery_external_table_task",
+    #     table_resource={
+    #         "tableReference": {
+    #             "projectId": PROJECT_ID,
+    #             "datasetId": BIGQUERY_DATASET,
+    #             "tableId": "external_table",
+    #         },
+    #         "externalDataConfiguration": {
+    #             "sourceFormat": "PARQUET",
+    #             "sourceUris": [f"gs://{BUCKET}/raw/{parquet_file}"],
+    #         },
+    #     },
+    # )
 
     download_dataset_task >> format_to_parquet_task >> local_to_gcs_task >> bigquery_external_table_task
