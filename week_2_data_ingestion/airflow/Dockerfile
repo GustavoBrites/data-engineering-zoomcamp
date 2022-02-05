@@ -12,9 +12,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install --no-cache-dir pandas sqlalchemy psycopg2-binary
 
-# # Ref: https://airflow.apache.org/docs/docker-stack/recipes.html
-
-# SHELL ["/bin/bash", "-o", "pipefail", "-e", "-u", "-x", "-c"]
+# Ref: https://airflow.apache.org/docs/docker-stack/recipes.html
 
 # ARG CLOUD_SDK_VERSION=322.0.0
 # ENV GCLOUD_HOME=/home/google-cloud-sdk
@@ -36,7 +34,7 @@ RUN pip install --no-cache-dir pandas sqlalchemy psycopg2-binary
 
 WORKDIR $AIRFLOW_HOME
 
-#COPY scripts scripts
-#RUN chmod +x scripts
+COPY scripts scripts
+RUN chmod +x scripts
 
 USER $AIRFLOW_UID
