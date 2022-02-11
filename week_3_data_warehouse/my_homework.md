@@ -7,9 +7,16 @@ We will use all the knowledge learned in this week. Please answer your questions
 **What is count for fhv vehicles data for year 2019**  
 Can load the data for cloud storage and run a count(*)
 
+
+SELECT COUNT (*) 
+FROM `mystical-nimbus-338219.trips_data_all.fhv_tripdata_external_table` 
+
 ### Question 2: 
 **How many distinct dispatching_base_num we have in fhv for 2019**  
 Can run a distinct query on the table from question 1
+
+SELECT COUNT (DISTINCT dispatching_base_num) 
+FROM `mystical-nimbus-338219.trips_data_all.fhv_tripdata_external_table` 
 
 ### Question 3: 
 **Best strategy to optimise if query always filter by dropoff_datetime and order by dispatching_base_num**  
@@ -22,6 +29,14 @@ performance and reduce cost.
 Create a table with optimized clustering and partitioning, and run a 
 count(*). Estimated data processed can be found in top right corner and
 actual data processed can be found after the query is executed.
+
+used the DAG in gcs_to_bq_dag_hw3q4.py to create the partitioned_clustered table
+
+
+SELECT COUNT(*) FROM `mystical-nimbus-338219.trips_data_all.fhv_tripdata_partitioned_clustered2` 
+WHERE DATE(dropoff_datetime)  BETWEEN '2019-01-01' AND '2019-03-30' 
+AND dispatching_base_num IN ('B00987','B02060','B02279')
+
 
 ### Question 5: 
 **What will be the best partitioning or clustering strategy when filtering on dispatching_base_num and SR_Flag**  

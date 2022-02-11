@@ -13,8 +13,8 @@ path_to_local_home = os.environ.get("AIRFLOW_HOME", "/opt/airflow/")
 BIGQUERY_DATASET = os.environ.get("BIGQUERY_DATASET", 'trips_data_all')
 
 DATASET = "tripdata"
-COLOUR_RANGE = {'yellow': 'tpep_pickup_datetime', 'green': 'lpep_pickup_datetime'}
-INPUT_PART = "raw"
+COLOUR_RANGE = {'yellow': 'tpep_pickup_datetime','fhv': 'DropOff_datetime'} 
+INPUT_PART = "ingested"
 INPUT_FILETYPE = "parquet"
 
 default_args = {
@@ -26,12 +26,12 @@ default_args = {
 
 # NOTE: DAG declaration - using a Context Manager (an implicit way)
 with DAG(
-    dag_id="gcs_2_bq_dag",
+    dag_id="dag_hw3_gcs_2_bq",
     schedule_interval="@daily",
     default_args=default_args,
     catchup=False,
     max_active_runs=1,
-    tags=['dtc-de'],
+    #tags=['dtc-de'],
 ) as dag:
 
     for colour, ds_col in COLOUR_RANGE.items():
@@ -40,7 +40,7 @@ with DAG(
             source_bucket=BUCKET,
             source_object=f'{INPUT_PART}/{colour}_{DATASET}*.{INPUT_FILETYPE}',
             destination_bucket=BUCKET,
-            destination_object=f'{colour}/{colour}_{DATASET}',
+            destination_object=f'{colour}/{colour}_{DATASET}*.{INPUT_FILETYPE}',
             move_object=True
         )
 
@@ -66,6 +66,7 @@ with DAG(
             AS \
             SELECT * FROM {BIGQUERY_DATASET}.{colour}_{DATASET}_external_table;"
         )
+        
 
         # Create a partitioned table from external table
         bq_create_partitioned_table_job = BigQueryInsertJobOperator(
