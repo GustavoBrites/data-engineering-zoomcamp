@@ -31,6 +31,7 @@ count(*). Estimated data processed can be found in top right corner and
 actual data processed can be found after the query is executed.
 
 used the DAG in gcs_to_bq_dag_hw3q4.py to create the partitioned_clustered table
+used the date '2019-03-30' to give the answer from the available options. 
 
 
 SELECT COUNT(*) FROM `mystical-nimbus-338219.trips_data_all.fhv_tripdata_partitioned_clustered2` 
