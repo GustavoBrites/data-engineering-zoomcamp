@@ -13,7 +13,7 @@ path_to_local_home = os.environ.get("AIRFLOW_HOME", "/opt/airflow/")
 BIGQUERY_DATASET = os.environ.get("BIGQUERY_DATASET", 'trips_data_all')
 
 DATASET = "tripdata"
-COLOUR_RANGE = {'yellow': 'tpep_pickup_datetime','fhv': 'DropOff_datetime'} 
+COLOUR_RANGE = {'green': 'lpep_pickup_datetime'} 
 INPUT_PART = "ingested"
 INPUT_FILETYPE = "parquet"
 
@@ -26,7 +26,7 @@ default_args = {
 
 # NOTE: DAG declaration - using a Context Manager (an implicit way)
 with DAG(
-    dag_id="dag_hw3_gcs_2_bq",
+    dag_id="dag_GREEN_gcs_2_bq",
     schedule_interval="@daily",
     default_args=default_args,
     catchup=False,
@@ -69,14 +69,14 @@ with DAG(
         
 
         # Create a partitioned table from external table
-        bq_create_partitioned_table_job = BigQueryInsertJobOperator(
-            task_id=f"bq_create_{colour}_{DATASET}_partitioned_table_task",
-            configuration={
-                "query": {
-                    "query": CREATE_BQ_TBL_QUERY,
-                    "useLegacySql": False,
-                }
-            }
-        )
+        # bq_create_partitioned_table_job = BigQueryInsertJobOperator(
+        #     task_id=f"bq_create_{colour}_{DATASET}_partitioned_table_task",
+        #     configuration={
+        #         "query": {
+        #             "query": CREATE_BQ_TBL_QUERY,
+        #             "useLegacySql": False,
+        #         }
+        #     }
+        # )
 
-        move_files_gcs_task >> bigquery_external_table_task >> bq_create_partitioned_table_job
+        move_files_gcs_task >> bigquery_external_table_task #>> bq_create_partitioned_table_job
